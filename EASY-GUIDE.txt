@@ -1,0 +1,569 @@
+=====================================================================
+    THE RE/MAX ONE RENTALS INTRANET
+    A Simple Guide for Non-Technical People
+=====================================================================
+
+This guide explains, in plain English:
+  1. What this application is
+  2. How it works (the technology, explained simply)
+  3. What you need before you start
+  4. How to set it up, step by step
+  5. How to put it on the internet so agents can use it
+  6. How agents use it every day
+  7. How to change the colours and logo
+  8. Common problems and how to fix them
+  9. One important thing to check before launch
+
+No computer experience is needed to read this. Where you DO need to
+type commands, this guide shows you exactly what to type.
+
+
+=====================================================================
+PART 1: WHAT IS THIS APPLICATION?
+=====================================================================
+
+It is a private website (an "intranet") for your estate agency.
+
+Think of it like a secure clubhouse on the internet:
+  - Only people with a company email address can get in the door.
+  - Once inside, each agent sees THEIR OWN leases, billing,
+    maintenance requests, deposit payouts and renewals - and nobody
+    else's.
+  - There are six big buttons for submitting new requests, which
+    open the same Google Forms your agents already use today.
+
+THE MOST IMPORTANT IDEA:
+
+Nothing about how your admin team works changes. Your admins keep
+updating the same five Google Sheets (the "workflow trackers") they
+use today. The new website simply READS those sheets and shows each
+agent a tidy, phone-friendly view of their own rows.
+
+Picture it like a restaurant:
+  - The Google Sheets are the kitchen, where the admins do the work.
+  - The new website is the serving window, where each agent can look
+    in and see how their own order is coming along.
+  - The website never cooks anything itself. It only looks.
+
+That means: if the website ever breaks, your business keeps running
+exactly as before. Zero risk to your existing process.
+
+
+=====================================================================
+PART 2: THE TECHNOLOGY, EXPLAINED LIKE YOU'RE 10
+=====================================================================
+
+The application is built from a few well-known pieces of technology.
+You don't need to understand them deeply, but here's what each one
+is, using everyday comparisons:
+
+NEXT.JS (say: "next jay-ess")
+  This is the framework the website is built with - think of it as
+  the pre-built skeleton of a house. Instead of building walls and
+  plumbing from scratch, builders start with a proven frame. It's
+  made by a big company (Vercel) and used by huge websites like
+  Netflix and TikTok. It handles both the part you SEE (the pages)
+  and the part you DON'T see (the behind-the-scenes work).
+
+TYPESCRIPT
+  The language the code is written in. It's like writing with
+  spell-check turned on - the computer catches mistakes before they
+  become bugs that users see.
+
+GOOGLE SIGN-IN (the login system)
+  Instead of inventing our own usernames and passwords (risky and
+  annoying), agents log in with the Google account they already
+  have for their company email. It's like using your office access
+  card to open a new door - no new keys to hand out, and when
+  someone leaves the company and their email is switched off, they
+  automatically lose access to the intranet too.
+
+THE "SERVICE ACCOUNT" (the robot reader)
+  This is a special robot Google account that the website uses to
+  read your five tracker spreadsheets. You share the spreadsheets
+  with the robot the same way you'd share them with a person - but
+  the robot can ONLY LOOK, never edit. It's like giving someone a
+  window to look through, not a key to the room.
+
+THE DATABASE (a small filing cabinet)
+  The website keeps one small filing cabinet of its own. It does
+  NOT store your leases or requests (those stay in Google Sheets).
+  It only stores three small things:
+    - Who is allowed to log in
+    - "Also known as" names (explained in Part 9)
+    - A logbook of who logged in and when
+
+TAILWIND CSS (the paint and decorating kit)
+  The tool used to make everything look good and work nicely on
+  phones. All your brand colours live in ONE place, like a single
+  tin of paint - change the tin, repaint the whole house.
+
+THE 60-SECOND MEMORY (why it stays fast)
+  When one agent looks at the leases page, the website fetches the
+  sheet and remembers it for 60 seconds. If 50 more agents look in
+  that same minute, they all get the remembered copy instantly.
+  This keeps the site fast and keeps Google happy, even with 130+
+  agents using it at once.
+
+
+=====================================================================
+PART 3: WHAT YOU NEED BEFORE YOU START
+=====================================================================
+
+  1. A computer (Windows or Mac) to do the one-time setup on.
+
+  2. NODE.JS - a free program that runs the website's code.
+     Think of it as the engine the website runs on.
+     Download it from:  https://nodejs.org
+     Click the big green "LTS" button, run the installer, and click
+     Next / Next / Finish. That's it.
+
+  3. Access to your company's Google account - you'll need to be
+     able to log in to Google Cloud (console.cloud.google.com) with
+     a company account. Any Google Workspace administrator can do
+     this, or grant you permission.
+
+  4. The five tracker spreadsheets - you need permission to open
+     them and click their "Share" buttons.
+
+  5. The project folder - the folder called "remax-one-intranet"
+     that contains all the code (the folder this guide lives in).
+
+A NOTE ON "THE TERMINAL":
+Some steps ask you to type commands into a black window called the
+terminal (on Windows it's called "PowerShell"). Don't be scared of
+it - it's just a way of giving the computer typed instructions
+instead of mouse clicks.
+
+To open it on Windows:
+  - Press the Windows key, type: powershell , press Enter.
+
+To "go into" the project folder, type this and press Enter:
+  cd "C:\Docs\Refilwe Mabotja\remax-one-intranet"
+
+(If the folder is somewhere else, put that path in the quotes
+instead.) Every command in this guide is typed AFTER doing this.
+
+
+=====================================================================
+PART 4: ONE-TIME GOOGLE SETUP (ABOUT 15 MINUTES)
+=====================================================================
+
+This creates two things: the LOGIN KEY (so agents can sign in with
+their company email) and the ROBOT READER (so the website can read
+your sheets). You only ever do this once.
+
+Go to https://console.cloud.google.com and sign in with a company
+Google account.
+
+STEP A - CREATE A PROJECT
+  At the top of the page, click the project dropdown, then
+  "New Project". Name it something like "remax-one-intranet" and
+  click Create. Make sure it's selected afterwards.
+
+STEP B - SWITCH ON THE SHEETS API
+  In the search bar at the top, type "Google Sheets API", click it,
+  then click the blue ENABLE button. This flips the switch that
+  allows reading spreadsheets.
+
+STEP C - THE CONSENT SCREEN (the login "front door" settings)
+  Search for "OAuth consent screen".
+  Choose "Internal" - THIS IS IMPORTANT. "Internal" means ONLY
+  people in your company's Google Workspace can ever log in.
+  Fill in the app name (e.g. "One Rentals Intranet") and a support
+  email. Save.
+
+STEP D - CREATE THE LOGIN KEY
+  Search for "Credentials", click "+ Create credentials", choose
+  "OAuth client ID", then application type "Web application".
+  Fill in these two boxes:
+
+    Authorized JavaScript origins:
+      http://localhost:3000
+
+    Authorized redirect URIs:
+      http://localhost:3000/api/auth/callback/google
+
+  ("localhost:3000" means "this website running on my own computer"
+  - it's how we test before going live. In Part 6 you'll come back
+  and add the real website address here too.)
+
+  Click Create. A box pops up showing a CLIENT ID and a CLIENT
+  SECRET. Copy both somewhere safe - you'll paste them in Part 5.
+  Treat the secret like a password.
+
+STEP E - CREATE THE ROBOT READER
+  Search for "Service Accounts", click "+ Create service account".
+  Name it "intranet-reader". Skip the optional permission steps
+  (click Done).
+
+  Now click on the account you just made, go to the "Keys" tab,
+  click "Add key" > "Create new key" > choose JSON > Create.
+  A file downloads to your computer. This file is the robot's ID
+  card - keep it private, never email it around.
+
+  Open that file with Notepad. You'll see lines like:
+    "client_email": "intranet-reader@....iam.gserviceaccount.com"
+    "private_key": "-----BEGIN PRIVATE KEY-----\n....."
+  You'll copy these two values in Part 5.
+
+STEP F - INTRODUCE THE ROBOT TO YOUR SPREADSHEETS
+  Open each of the five tracker spreadsheets (leases, billing,
+  maintenance, deposit payouts, renewals). On each one:
+    - Click the green "Share" button
+    - Paste in the robot's email address (the client_email above)
+    - Set it to "Viewer"
+    - Untick "Notify people", click Share/Send.
+  Now the robot can look at (but never change) all five sheets.
+
+
+=====================================================================
+PART 5: SETTING UP THE APPLICATION ON YOUR COMPUTER
+=====================================================================
+
+STEP 1 - INSTALL THE APP'S BUILDING BLOCKS
+  Open PowerShell, go into the project folder (see Part 3), then
+  type:
+
+    npm install
+
+  This downloads all the ready-made parts the app is built from.
+  It takes a few minutes. Lots of text scrolling by is normal.
+
+STEP 2 - FILL IN THE SETTINGS FILE
+  The app reads its private settings (keys, passwords) from a file
+  called ".env". There's a template ready for you:
+
+  In the project folder, find the file called  .env.example ,
+  make a COPY of it, and rename the copy to exactly:  .env
+
+  Open .env with Notepad. Every line that looks like
+  NAME="value" is a setting. Fill these in:
+
+    NEXTAUTH_URL
+      Leave as http://localhost:3000 for now.
+
+    NEXTAUTH_SECRET
+      A long random scramble of letters and numbers (30+ characters)
+      that the app uses to seal login sessions - like the unique
+      pattern on a wax seal. Mash the keyboard or use a password
+      generator. Never share it.
+
+    GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+      Paste the two values from Part 4, Step D.
+
+    ALLOWED_EMAIL_DOMAINS
+      Your company's email domain - the part after the @ in staff
+      emails. E.g. if staff emails end in @remax-one.co.za, put:
+      ALLOWED_EMAIL_DOMAINS="remax-one.co.za"
+      This is the bouncer at the door: any email NOT ending in this
+      is turned away, even if it's a real Google account.
+
+    GOOGLE_SERVICE_ACCOUNT_EMAIL
+      The robot's email (client_email from the JSON file, Part 4
+      Step E).
+
+    GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
+      The robot's private_key from the same JSON file. Copy the
+      WHOLE thing, including the -----BEGIN and -----END parts and
+      all the \n bits, keeping it on one line inside the quotes.
+      This one is fiddly - copy it exactly as it appears in the
+      JSON file.
+
+    DATABASE_URL
+      Leave as it is ( file:./dev.db ) - that just means "keep the
+      little filing cabinet in a local file".
+
+STEP 3 - CREATE THE FILING CABINET (DATABASE)
+  In PowerShell, in the project folder, type:
+
+    npm run db:migrate
+
+  When it asks for a name for the change, just type: init
+  and press Enter. This builds the small database file.
+
+STEP 4 - START THE APP AND TEST IT
+  Type:
+
+    npm run dev
+
+  Wait until it says "Ready". Now open your web browser and go to:
+
+    http://localhost:3000
+
+  You should see the login page with the logo. Click "Sign in with
+  company email", pick your company Google account, and you should
+  land on the dashboard with the six submit buttons and the menu on
+  the left.
+
+  QUICK HEALTH CHECK: visit  http://localhost:3000/api/health
+  If it says "ok": true - everything is wired up correctly.
+  If it lists names under "missingEnv", those settings in your .env
+  file are empty or misspelled.
+
+  To stop the app, click in the PowerShell window and press
+  Ctrl + C.
+
+
+=====================================================================
+PART 6: PUTTING IT ON THE INTERNET (DEPLOYMENT)
+=====================================================================
+
+Running on your computer is just for testing - when you close your
+laptop, the site goes off. To make it available to all 130+ agents,
+24/7, you put it on a hosting service. Think of hosting as renting
+a shop in a mall instead of selling from your garage.
+
+THE EASY, RECOMMENDED WAY: VERCEL
+Vercel is the company that makes Next.js, and hosting there is
+mostly clicking buttons. The general idea:
+
+  1. Put the project code into a free GitHub account (GitHub is
+     like Google Drive, but for code).
+
+  2. Sign up at vercel.com (you can sign in with GitHub), click
+     "Add New Project", and pick your project. Vercel builds and
+     publishes it automatically.
+
+  3. Give Vercel your settings: in the Vercel project's
+     Settings > Environment Variables, add every setting from your
+     .env file, one by one. Two of them CHANGE for the live site:
+
+       NEXTAUTH_URL = your real address, e.g.
+                      https://portal.remax-one.co.za
+                      (or the address Vercel gives you, like
+                      https://remax-one-intranet.vercel.app)
+
+       DATABASE_URL = a "grown-up" database. The local file version
+                      is fine for testing, but for the live site use
+                      a free managed Postgres database (Vercel
+                      Postgres, Neon, or Supabase - all have free
+                      tiers and give you a DATABASE_URL to paste).
+                      One small code change goes with this: in the
+                      file prisma/schema.prisma, the line
+                      provider = "sqlite" must become
+                      provider = "postgresql". Then run, one time:
+                      npm run db:deploy
+
+  4. Tell Google about the new address: go back to Google Cloud >
+     Credentials > your OAuth client (Part 4, Step D) and ADD the
+     live versions alongside the localhost ones:
+
+       Origins:       https://your-real-address
+       Redirect URIs: https://your-real-address/api/auth/callback/google
+
+     (Without this, Google refuses logins from the live site.)
+
+  5. Visit https://your-real-address/api/health and check it says
+     "ok": true. Then log in and test each menu page.
+
+  6. (Optional but nice) In Vercel > Settings > Domains you can
+     attach your own web address like portal.remax-one.co.za.
+
+BEFORE YOU ANNOUNCE IT TO THE AGENTS - FINAL CHECKLIST:
+  [ ] ALLOWED_EMAIL_DOMAINS is set on the live site (without it,
+      the live site refuses ALL logins on purpose, for safety)
+  [ ] NEXTAUTH_URL is the real https address
+  [ ] The live address was added in Google Cloud (step 4 above)
+  [ ] All five sheets are shared with the robot reader
+  [ ] The health check page says ok: true
+  [ ] The agent-name columns are verified (see Part 9 - important!)
+  [ ] Your real logo and colours are in (see Part 8)
+
+
+=====================================================================
+PART 7: HOW AGENTS USE IT DAY-TO-DAY
+=====================================================================
+
+  1. Go to the intranet address on any phone, tablet or computer.
+  2. Tap "Sign in with company email" and pick your work Google
+     account. (Personal Gmail accounts are politely refused.)
+  3. You land on the HOME page:
+       - Six big buttons: Submit New Lease, Submit Billing, Submit
+         Lease Renewal, Submit Deposit Payout Request, Submit
+         Maintenance, Submit RedRabbit Profile Request. Tapping one
+         opens the familiar Google Form in a new tab - fill it in
+         exactly as before.
+       - A menu on the left (on a phone: tap the three-line button
+         in the top corner to open it) with:
+           My Leases            - every lease you've submitted, with
+                                  date, property, admin, status,
+                                  invoices, recon, outstanding docs
+           My Billing           - your billing instructions & status
+           My Maintenance       - your maintenance requests & notes
+           My Deposit Payouts   - capturing and payout status
+           My Renewals          - scope, instructions and status
+  4. On every list page you can:
+       - SEARCH (type a property name, a status, an admin's name)
+       - REFRESH (pull the newest info from the tracker)
+       - Read the colour-coded status pills at a glance:
+         green = done/complete, orange = busy/pending, red = a
+         problem or something outstanding.
+  5. Tap "Sign out" (top right) when done - especially on shared
+     computers.
+
+Statuses shown come straight from the admin team's tracker sheets.
+When an admin updates the sheet, agents see it within about a
+minute.
+
+
+=====================================================================
+PART 8: CHANGING THE LOOK AND FEEL (BRANDING)
+=====================================================================
+
+Everything about the look lives in just three places:
+
+  1. THE LOGO
+     Replace the file  public\logo.svg  with your official logo
+     file, keeping the same file name. (If your logo is a .png,
+     put it in the public folder and change "logoSrc" in the file
+     src\config\brand.ts to "/your-logo.png".)
+
+  2. THE COLOURS AND FONT
+     Open  src\app\globals.css  in Notepad. Right at the top is a
+     clearly-marked section like:
+
+       --brand-primary: #dc1c2e;     (the red - buttons)
+       --brand-secondary: #003da5;   (the blue - menu & headings)
+
+     Those #-codes are colour codes. Swap in your own brand codes
+     (your marketing team or a site like htmlcolorcodes.com can
+     give you the code for any colour). Change the code, save, and
+     the ENTIRE site repaints itself.
+
+  3. THE NAMES
+     Open  src\config\brand.ts  and change the company name,
+     tagline and support email text.
+
+After changing these on the live site, the hosting service rebuilds
+and the new look appears in a minute or two.
+
+
+=====================================================================
+PART 9: THE ONE IMPORTANT THING TO CHECK BEFORE LAUNCH
+=====================================================================
+
+THE "WHICH COLUMN HAS THE AGENT'S NAME?" QUESTION
+
+The website shows each agent only THEIR rows. To do that, it looks
+at the column in each tracker sheet that contains the agent's name,
+and matches it to the person who logged in.
+
+The original requirements listed every column EXCEPT that one. So
+the app currently uses best guesses:
+
+    Leases sheet:       column C
+    Billing sheet:      column B
+    Maintenance sheet:  column B
+    Deposit sheet:      column C
+    Renewals sheet:     column B
+
+PLEASE CHECK: open each tracker sheet and look at the header row.
+Find which column actually holds the agent's name. If a guess is
+wrong, fix it by adding a line to your .env file (or the hosting
+service's environment variables), for example:
+
+    SHEETS_LEASES_AGENT_COL="D"
+
+(There's one for each: SHEETS_BILLING_AGENT_COL,
+SHEETS_MAINTENANCE_AGENT_COL, SHEETS_DEPOSITS_AGENT_COL,
+SHEETS_RENEWALS_AGENT_COL.)
+
+THE "ALSO KNOWN AS" NAMES (ALIASES)
+
+Agents log in with an EMAIL, but the sheets contain NAMES typed by
+humans - and humans are inconsistent. The sheet might say
+"J. Smith" one month and "John Smith" the next, while his Google
+account says "Johnathan Smith".
+
+If an agent logs in and sees an empty list even though they have
+rows in the sheet, this mismatch is almost always why. The fix:
+add their alternative spellings ("aliases") to the app's filing
+cabinet. In PowerShell, in the project folder, type:
+
+    npx prisma studio
+
+A friendly page opens in your browser showing the database like a
+spreadsheet. Open "AgentProfile", find the agent (they appear here
+automatically after their first login), then add rows in
+"AgentAlias" with the exact spellings used in the sheets. Done -
+their rows appear on their next refresh.
+
+MAKING SOMEONE A MANAGER (ADMIN)
+
+In that same Prisma Studio page, changing a person's "role" from
+AGENT to ADMIN makes them see EVERYONE's rows in every list -
+useful for the rentals manager and admin staff.
+
+REMOVING SOMEONE'S ACCESS
+
+Two layers of protection:
+  - When IT switches off their company Google account, they can't
+    log in anymore - automatically.
+  - You can also flip their "active" switch to false in Prisma
+    Studio to block them instantly, even if their email still works.
+
+
+=====================================================================
+PART 10: COMMON PROBLEMS AND FIXES
+=====================================================================
+
+"Please sign in with your company email address"
+  -> They used a personal Gmail or an email whose domain isn't in
+     ALLOWED_EMAIL_DOMAINS. Or their profile was set to inactive.
+
+A page says "Couldn't load your leases" (or similar)
+  -> Usually one of:
+     - That sheet wasn't shared with the robot reader (Part 4 F)
+     - The Sheets API wasn't enabled (Part 4 B)
+     - The robot's private key was pasted incorrectly into .env -
+       recopy it carefully from the JSON file.
+
+An agent's list is empty but their rows ARE in the sheet
+  -> The name-matching issue. See Part 9: check the agent-name
+     column guesses, and add aliases for that agent.
+
+Error mentioning "Tab with gid ... not found"
+  -> Someone deleted and recreated a tab in a tracker spreadsheet,
+     which gives it a new internal number. A developer updates one
+     number in src\config\sheets.ts.
+
+Login goes round in circles
+  -> NEXTAUTH_URL doesn't match the address in the browser's
+     address bar. Make them match.
+
+The site looks broken after a colour change
+  -> A typo in globals.css - colour codes must look like #1a2b3c
+     and each line must end with a semicolon ;
+
+WHEN IN DOUBT: visit  /api/health  on the site (for example
+https://your-address/api/health). It tells you if any settings are
+missing, by name. It never reveals the secret values themselves.
+
+
+=====================================================================
+QUICK REFERENCE CARD
+=====================================================================
+
+  Start the app for testing:        npm run dev
+  Then open in browser:             http://localhost:3000
+  Stop the app:                     Ctrl + C in the black window
+  Open the database viewer:         npx prisma studio
+  Check settings are complete:      visit /api/health
+  Settings file:                    .env  (in the project folder)
+  Colours:                          src\app\globals.css
+  Logo:                             public\logo.svg
+  Company name text:                src\config\brand.ts
+  Form links (6 buttons):           src\config\forms.ts
+  Sheet & column settings:          src\config\sheets.ts
+
+  Golden rules:
+    - Never share the .env file, the JSON key file, or anything
+      called "secret" - they are the keys to the building.
+    - The website only READS your sheets - your admin team's
+      workflow never changes.
+    - When stuck, check /api/health first.
+
+=====================================================================
+                         END OF GUIDE
+=====================================================================

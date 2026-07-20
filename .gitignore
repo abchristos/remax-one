@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# local env files - NEVER commit secrets
+.env
+.env.local
+.env*.local
+
+# database (SQLite dev database)
+prisma/*.db
+prisma/*.db-journal
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+tsconfig.tsbuildinfo
+next-env.d.ts

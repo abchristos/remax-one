@@ -1,0 +1,58 @@
+// RE/MAX One Rentals Intranet - database schema
+//
+// The Google Sheets remain the system of record for request data (the admins
+// keep working exactly as they do today). The database only stores what the
+// sheets cannot: who may log in, how a login email maps to the agent names
+// used inside the sheets, and an audit trail.
+//
+// Dev default is SQLite (zero setup). For production change `provider` to
+// "postgresql" and point DATABASE_URL at your Postgres instance - the schema
+// is compatible with both.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// One row per person allowed on the intranet. Auto-provisioned on first
+/// successful Google sign-in with an allowed company domain.
+model AgentProfile {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  fullName  String
+  /// "AGENT" or "ADMIN". Admins see every row in every tracker, not just
+  /// their own. (String instead of enum for SQLite compatibility.)
+  role      String   @default("AGENT")
+  active    Boolean  @default(true)
+  aliases   AgentAlias[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Alternative spellings of an agent's name as they appear in the tracker
+/// sheets, e.g. "J. Smith", "John Smith", "Smith J". Rows in a sheet are
+/// matched to the logged-in user through these aliases (plus fullName).
+model AgentAlias {
+  id      String       @id @default(cuid())
+  name    String
+  agent   AgentProfile @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId String
+
+  @@unique([agentId, name])
+  @@index([name])
+}
+
+/// Simple audit trail: logins and data reads.
+model AuditLog {
+  id        String   @id @default(cuid())
+  email     String
+  action    String
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+}

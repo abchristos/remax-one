@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   BRAND THEME - change these variables to re-skin the whole intranet.
+   Defaults follow RE/MAX brand identity (red / blue / white).
+   ========================================================================== */
+:root {
+  --brand-primary: #dc1c2e; /* RE/MAX red   - buttons, highlights   */
+  --brand-primary-dark: #b31324; /* hover state                     */
+  --brand-secondary: #003da5; /* RE/MAX blue  - sidebar, headings   */
+  --brand-secondary-dark: #002d7a;
+  --brand-surface: #f5f6f8; /* page background                     */
+  --brand-ink: #1a1d23; /* main text colour                        */
+  --brand-font: "Segoe UI", Arial;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-brand-surface text-brand-ink antialiased;
+}
