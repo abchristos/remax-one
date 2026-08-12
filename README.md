@@ -14,7 +14,7 @@ Architecture and design rationale: see [DESIGN.md](DESIGN.md).
 
 - **Node.js 18.17+** (LTS recommended) and npm
 - A **Google Cloud project** you can create credentials in (any Google Workspace admin can)
-- Viewer access to the five workflow tracker spreadsheets
+- Viewer access to the seven workflow tracker spreadsheets
 
 ### 1. Get the code & install dependencies
 

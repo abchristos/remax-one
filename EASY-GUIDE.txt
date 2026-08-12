@@ -208,13 +208,18 @@ STEP E - CREATE THE ROBOT READER
   You'll copy these two values in Part 5.
 
 STEP F - INTRODUCE THE ROBOT TO YOUR SPREADSHEETS
-  Open each of the five tracker spreadsheets (leases, billing,
-  maintenance, deposit payouts, renewals). On each one:
+  Open each of the SEVEN tracker spreadsheets (leases, billing,
+  maintenance, deposit payouts, renewals, queries, POPs). On each:
     - Click the green "Share" button
     - Paste in the robot's email address (the client_email above)
     - Set it to "Viewer"
     - Untick "Notify people", click Share/Send.
-  Now the robot can look at (but never change) all five sheets.
+  Now the robot can look at (but never change) all seven sheets.
+
+  DON'T SKIP THE LAST TWO. The queries and POP trackers were added
+  after the first five. If you forget to share them, "My Queries"
+  and "My POPs" will show a red "couldn't load" message while every
+  other page works perfectly - which is a confusing thing to debug.
 
 
 =====================================================================
@@ -379,11 +384,11 @@ PART 7: HOW AGENTS USE IT DAY-TO-DAY
   2. Tap "Sign in with company email" and pick your work Google
      account. (Personal Gmail accounts are politely refused.)
   3. You land on the HOME page:
-       - Six big buttons: Submit New Lease, Submit Billing, Submit
+       - Eight big buttons: Submit New Lease, Submit Billing, Submit
          Lease Renewal, Submit Deposit Payout Request, Submit
-         Maintenance, Submit RedRabbit Profile Request. Tapping one
-         opens the familiar Google Form in a new tab - fill it in
-         exactly as before.
+         Maintenance, Submit RedRabbit Profile Request, Submit a
+         Query, Submit a POP. Tapping one opens the familiar Google
+         Form in a new tab - fill it in exactly as before.
        - A menu on the left (on a phone: tap the three-line button
          in the top corner to open it) with:
            My Leases            - every lease you've submitted, with
@@ -393,6 +398,8 @@ PART 7: HOW AGENTS USE IT DAY-TO-DAY
            My Maintenance       - your maintenance requests & notes
            My Deposit Payouts   - capturing and payout status
            My Renewals          - scope, instructions and status
+           My Queries           - every query you've raised
+           My POPs              - every proof of payment you've sent
   4. On every list page you can:
        - SEARCH (type a property name, a status, an admin's name)
        - REFRESH (pull the newest info from the tracker)
@@ -468,6 +475,25 @@ service's environment variables), for example:
 (There's one for each: SHEETS_BILLING_AGENT_COL,
 SHEETS_MAINTENANCE_AGENT_COL, SHEETS_DEPOSITS_AGENT_COL,
 SHEETS_RENEWALS_AGENT_COL.)
+
+THE QUERIES AND POP SHEETS WORK DIFFERENTLY
+
+Those two aren't guessed at all. The app opens the sheet, reads the
+header row, and works out for itself which column holds the agent -
+preferring an "Agent email address" column, because an email is an
+exact match and a typed name never quite is. It also builds the
+table columns from those same headers, so whatever the admins have
+in the sheet is what agents see.
+
+Two things follow from that:
+
+  - If admins use a column for private remarks, agents WILL see it
+    on their own rows. Say the word and that column gets hidden.
+  - If the app cannot find an agent column at all, it deliberately
+    shows NOTHING and says so on screen. It will never fall back to
+    showing everybody's rows. If you see that message, add a line
+    like SHEETS_POPS_AGENT_COL="B" to your .env, using the column
+    letter that holds the agent's name or email.
 
 THE "ALSO KNOWN AS" NAMES (ALIASES)
 

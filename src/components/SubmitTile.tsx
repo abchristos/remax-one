@@ -5,6 +5,8 @@ import {
   Banknote,
   Wrench,
   Rabbit,
+  MessageSquare,
+  CreditCard,
   ExternalLink,
 } from "lucide-react";
 import type { SubmitForm } from "@/config/forms";
@@ -16,6 +18,8 @@ const ICONS = {
   banknote: Banknote,
   wrench: Wrench,
   rabbit: Rabbit,
+  message: MessageSquare,
+  card: CreditCard,
 } as const;
 
 /** Dashboard tile - opens the existing Google Form in a new tab. */
