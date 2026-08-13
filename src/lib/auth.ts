@@ -16,6 +16,16 @@ const allowedDomains = (process.env.ALLOWED_EMAIL_DOMAINS ?? "")
   .map((d) => d.trim().toLowerCase())
   .filter(Boolean);
 
+/**
+ * Admins by email address. Set in .env so the first admin can be appointed
+ * without anyone editing the database - which otherwise leaves nobody able to
+ * open the sheet-check page or see all rows.
+ */
+const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+
 function isCompanyEmail(email: string | null | undefined): boolean {
   if (!email) return false;
   const domain = email.split("@")[1]?.toLowerCase();
@@ -69,9 +79,14 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       // Attach the role once at sign-in time.
       if (user?.email) {
+        const email = user.email.toLowerCase();
+        if (adminEmails.includes(email)) {
+          token.role = "ADMIN";
+          return token;
+        }
         try {
           const profile = await prisma.agentProfile.findUnique({
-            where: { email: user.email.toLowerCase() },
+            where: { email },
           });
           token.role = profile?.role ?? "AGENT";
         } catch {

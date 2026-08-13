@@ -55,6 +55,18 @@ export interface SheetConfig {
   fields?: SheetField[];
 }
 
+/** Convert a zero-based index back to a column letter (0 -> "A", 26 -> "AA"). */
+export function indexToColumn(index: number): string {
+  let n = index + 1;
+  let letters = "";
+  while (n > 0) {
+    const remainder = (n - 1) % 26;
+    letters = String.fromCharCode(65 + remainder) + letters;
+    n = Math.floor((n - 1) / 26);
+  }
+  return letters;
+}
+
 /** Convert a column letter ("A", "B", ... "AA") to a zero-based index. */
 export function columnToIndex(letter: string): number {
   let index = 0;

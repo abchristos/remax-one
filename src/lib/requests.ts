@@ -32,14 +32,18 @@ export interface RequestListResponse {
   notice?: string;
 }
 
-interface PortalUser {
+export interface PortalUser {
   email: string;
   name?: string | null;
   role?: string;
 }
 
-/** Build the name-based row matcher for a user from their profile + aliases. */
-async function matcherForUser(user: PortalUser): Promise<AgentMatcher> {
+/**
+ * Every name this user might appear under in a sheet: their Google display
+ * name, their profile name, and any admin-maintained aliases. Exported so the
+ * diagnostics page can show exactly what the app is comparing against.
+ */
+export async function agentNameCandidates(user: PortalUser): Promise<string[]> {
   const candidates: string[] = [];
   if (user.name) candidates.push(user.name);
 
@@ -61,7 +65,12 @@ async function matcherForUser(user: PortalUser): Promise<AgentMatcher> {
     candidates.push(user.email.split("@")[0].replace(/[._-]+/g, " "));
   }
 
-  return buildAgentMatcher(candidates);
+  return Array.from(new Set(candidates.filter(Boolean)));
+}
+
+/** Build the name-based row matcher for a user from their profile + aliases. */
+async function matcherForUser(user: PortalUser): Promise<AgentMatcher> {
+  return buildAgentMatcher(await agentNameCandidates(user));
 }
 
 /**
@@ -69,14 +78,18 @@ async function matcherForUser(user: PortalUser): Promise<AgentMatcher> {
  * the agent. Comes either from the hand-written config or, for sheets that
  * declare no `fields`, from the header row.
  */
-interface SheetLayout {
+export interface SheetLayout {
   columns: RequestColumn[];
   indexByKey: Record<string, number>;
   agentIndex: number | null;
   agentMode: "email" | "name";
+  /** How agentIndex was arrived at - surfaced on the diagnostics page. */
+  agentSource: "config" | "env" | "detected" | "none";
+  /** The sheet's header row, when the layout was derived from it. */
+  header?: string[];
 }
 
-async function resolveLayout(config: SheetConfig): Promise<SheetLayout> {
+export async function resolveLayout(config: SheetConfig): Promise<SheetLayout> {
   if (config.fields) {
     const indexByKey: Record<string, number> = {};
     for (const field of config.fields) {
@@ -92,6 +105,7 @@ async function resolveLayout(config: SheetConfig): Promise<SheetLayout> {
       indexByKey: indexByKey,
       agentIndex: config.agentColumn ? columnToIndex(config.agentColumn) : null,
       agentMode: "name",
+      agentSource: config.agentColumn ? "config" : "none",
     };
   }
 
@@ -115,6 +129,8 @@ async function resolveLayout(config: SheetConfig): Promise<SheetLayout> {
     indexByKey,
     agentIndex,
     agentMode,
+    agentSource: pinned !== null ? "env" : detected ? "detected" : "none",
+    header,
   };
 }
 

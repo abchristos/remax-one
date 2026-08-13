@@ -14,6 +14,7 @@ import {
   RotateCw,
   MessageSquare,
   CreditCard,
+  Stethoscope,
   Menu,
   X,
   LogOut,
@@ -29,6 +30,7 @@ interface ShellUser {
   name: string;
   email: string;
   image?: string | null;
+  isAdmin?: boolean;
 }
 
 const NAV_ITEMS = [
@@ -42,11 +44,15 @@ const NAV_ITEMS = [
   { href: "/pops", label: "My POPs", icon: CreditCard },
 ];
 
-function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
+/** Shown only to admins. */
+const ADMIN_NAV_ITEMS = [{ href: "/sheet-check", label: "Sheet check", icon: Stethoscope }];
+
+function NavLinks({ isAdmin, onNavigate }: { isAdmin?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
+  const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_NAV_ITEMS] : NAV_ITEMS;
   return (
     <nav className="flex flex-col gap-1 px-3" aria-label="Main menu">
-      {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+      {items.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link
@@ -69,7 +75,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarContent({ isAdmin, onNavigate }: { isAdmin?: boolean; onNavigate?: () => void }) {
   return (
     <div className="flex h-full flex-col bg-brand-secondary">
       <div className="flex items-center gap-3 px-5 py-5">
@@ -79,7 +85,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           <p className="text-xs text-white/60">{brand.tagline}</p>
         </div>
       </div>
-      <NavLinks onNavigate={onNavigate} />
+      <NavLinks isAdmin={isAdmin} onNavigate={onNavigate} />
       <div className="mt-auto p-4 text-center text-[11px] text-white/40">
         © {new Date().getFullYear()} {brand.companyName}
       </div>
@@ -100,7 +106,7 @@ export default function PortalShell({
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 md:block">
-        <SidebarContent />
+        <SidebarContent isAdmin={user.isAdmin} />
       </aside>
 
       {/* Mobile drawer */}
@@ -119,7 +125,7 @@ export default function PortalShell({
             >
               <X size={22} />
             </button>
-            <SidebarContent onNavigate={() => setDrawerOpen(false)} />
+            <SidebarContent isAdmin={user.isAdmin} onNavigate={() => setDrawerOpen(false)} />
           </aside>
         </div>
       )}
