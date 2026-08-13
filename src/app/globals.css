@@ -7,13 +7,13 @@
    Defaults follow RE/MAX brand identity (red / blue / white).
    ========================================================================== */
 :root {
-  --brand-primary: #dc1c2e; /* RE/MAX red   - buttons, highlights   */
-  --brand-primary-dark: #b31324; /* hover state                     */
-  --brand-secondary: #003da5; /* RE/MAX blue  - sidebar, headings   */
-  --brand-secondary-dark: #002d7a;
+  --brand-primary: #232323; /* RE/MAX red   - buttons, highlights   */
+  --brand-primary-dark: #c4c6c8; /* hover state                     */
+  --brand-secondary: #c4c6c8; /* RE/MAX blue  - sidebar, headings   */
+  --brand-secondary-dark: #f7f5ee;
   --brand-surface: #f5f6f8; /* page background                     */
-  --brand-ink: #1a1d23; /* main text colour                        */
-  --brand-font: "Segoe UI", Arial;
+  --brand-ink: #232323; /* main text colour                        */
+  --brand-font: "Gotham Bold", Gotham Book;
 }
 
 html,
