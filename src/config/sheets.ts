@@ -18,6 +18,8 @@ export const REQUEST_CATEGORIES = [
   "maintenance",
   "deposits",
   "renewals",
+  "queries",
+  "pops",
 ] as const;
 
 export type RequestCategory = (typeof REQUEST_CATEGORIES)[number];
@@ -40,9 +42,17 @@ export interface SheetConfig {
   spreadsheetId: string;
   /** The gid from the sheet URL - resolved to a tab name at runtime */
   gid: number;
-  /** Column letter holding the agent's name (used to filter rows per user) */
-  agentColumn: string;
-  fields: SheetField[];
+  /**
+   * Column letter holding the agent's name or email (used to filter rows per
+   * user). Omit to detect it from the header row at runtime - see
+   * src/lib/columns.ts. Detection fails closed: no column found means no rows.
+   */
+  agentColumn?: string;
+  /**
+   * The columns to display. Omit to build them from row 1 of the sheet, which
+   * lets a portal work without its layout being transcribed here.
+   */
+  fields?: SheetField[];
 }
 
 /** Convert a column letter ("A", "B", ... "AA") to a zero-based index. */
@@ -57,6 +67,12 @@ export function columnToIndex(letter: string): number {
 function agentCol(envVar: string, fallback: string): string {
   const value = process.env[envVar]?.trim();
   return value && /^[A-Za-z]{1,2}$/.test(value) ? value.toUpperCase() : fallback;
+}
+
+/** Same, but with no fallback: undefined means "detect from the header row". */
+function optionalAgentCol(envVar: string): string | undefined {
+  const value = process.env[envVar]?.trim();
+  return value && /^[A-Za-z]{1,2}$/.test(value) ? value.toUpperCase() : undefined;
 }
 
 export const SHEET_CONFIGS: Record<RequestCategory, SheetConfig> = {
@@ -133,5 +149,22 @@ export const SHEET_CONFIGS: Record<RequestCategory, SheetConfig> = {
       { key: "admin", label: "Admin", column: "F", kind: "text" },
       { key: "status", label: "Status", column: "G", kind: "status" },
     ],
+  },
+
+  // The two newest trackers declare no `fields` and no `agentColumn`: their
+  // columns are read from row 1 of the sheet at runtime. See src/lib/columns.ts.
+  queries: {
+    category: "queries",
+    title: "My Queries",
+    spreadsheetId: "1JugZJqS-VOIvvSVNTwetw78Od5YxMwR_2UONlppxgMM",
+    gid: 0,
+    agentColumn: optionalAgentCol("SHEETS_QUERIES_AGENT_COL"),
+  },
+  pops: {
+    category: "pops",
+    title: "My POPs",
+    spreadsheetId: "1II2zDM8KFjd-ygIhP6wXRVxulOeRfFfMYsaXIrLcQuU",
+    gid: 0,
+    agentColumn: optionalAgentCol("SHEETS_POPS_AGENT_COL"),
   },
 };

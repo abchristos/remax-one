@@ -1,5 +1,5 @@
 /**
- * The six "Submit ..." tiles on the dashboard. Each opens the existing
+ * The "Submit ..." tiles on the dashboard. Each opens the existing
  * Google Form in a new tab, so the current Apps Script automations
  * (Drive folder creation, tracker spreadsheet rows) keep working unchanged.
  */
@@ -9,7 +9,15 @@ export interface SubmitForm {
   description: string;
   url: string;
   /** lucide-react icon name resolved in the SubmitTile component */
-  icon: "file-signature" | "receipt" | "refresh" | "banknote" | "wrench" | "rabbit";
+  icon:
+    | "file-signature"
+    | "receipt"
+    | "refresh"
+    | "banknote"
+    | "wrench"
+    | "rabbit"
+    | "message"
+    | "card";
 }
 
 export const SUBMIT_FORMS: SubmitForm[] = [
@@ -54,5 +62,19 @@ export const SUBMIT_FORMS: SubmitForm[] = [
     description: "Request a RedRabbit profile",
     url: "https://docs.google.com/forms/d/e/1FAIpQLScC6C2N8YiYfOybwyVIQn5k5WymSBf0pH-Qr8T1abz1Y6jxhg/viewform",
     icon: "rabbit",
+  },
+  {
+    key: "query",
+    title: "Submit a Query",
+    description: "Raise a query about a property",
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScWGMgRyTDbrp_xSNx-qA82mfDfj4vJ1kBPUgw3Qt-AczeqzA/viewform",
+    icon: "message",
+  },
+  {
+    key: "pop",
+    title: "Submit a POP",
+    description: "Send through a proof of payment",
+    url: "https://forms.gle/77Bf6S4BH9MNVCZ28",
+    icon: "card",
   },
 ];

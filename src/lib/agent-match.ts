@@ -32,5 +32,15 @@ export function buildAgentMatcher(candidateNames: string[]): AgentMatcher {
   };
 }
 
+/**
+ * Matcher for sheets that capture the agent's EMAIL rather than their name -
+ * an exact comparison, so no aliases are needed and no row can be
+ * mis-attributed. Preferred whenever the sheet offers such a column.
+ */
+export function buildEmailMatcher(email: string): AgentMatcher {
+  const wanted = email.trim().toLowerCase();
+  return (agentCell) => !!agentCell && agentCell.trim().toLowerCase() === wanted;
+}
+
 /** Matcher that accepts every row - used for ADMIN users. */
 export const matchAll: AgentMatcher = () => true;

@@ -7,7 +7,7 @@ import type { RequestCategory } from "@/config/sheets";
 import type { RequestListResponse } from "@/lib/requests";
 
 /**
- * Shared client view for all five "My ..." pages: fetches the agent's rows
+ * Shared client view for every "My ..." page: fetches the agent's rows
  * from the API, with loading, error, empty, search and refresh states.
  */
 
@@ -106,7 +106,17 @@ export default function RequestsView({ category, title, description }: Props) {
           </div>
         )}
 
-        {!loading && !error && data && filteredRows.length === 0 && (
+        {!loading && !error && data?.notice && (
+          <div
+            role="status"
+            className="mb-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800"
+          >
+            <AlertTriangle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>{data.notice}</p>
+          </div>
+        )}
+
+        {!loading && !error && data && !data.notice && filteredRows.length === 0 && (
           <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
             <Inbox size={28} className="text-gray-300" aria-hidden="true" />
             <p className="font-medium text-gray-600">

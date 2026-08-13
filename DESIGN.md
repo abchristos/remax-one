@@ -1,5 +1,12 @@
 # RE/MAX One Rentals Intranet — MVP Design Document
 
+> **Since this was written:** two further categories — Queries and POPs
+> (proof of payments) — were added, taking the app to eight submit tiles and
+> seven tracker sheets. They derive their columns from the sheet's header row
+> rather than a hand-written config. See
+> [docs/superpowers/specs/2026-08-12-queries-pops-portals-design.md](docs/superpowers/specs/2026-08-12-queries-pops-portals-design.md).
+> Counts of "five" and "six" below refer to the original MVP.
+
 ## 1. Architecture
 
 ### Guiding decision

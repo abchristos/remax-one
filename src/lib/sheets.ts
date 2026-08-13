@@ -22,6 +22,7 @@ interface CacheEntry<T> {
 
 const tabTitleCache = new Map<string, CacheEntry<string>>();
 const rowsCache = new Map<string, CacheEntry<string[][]>>();
+const headerCache = new Map<string, CacheEntry<string[]>>();
 
 function getCached<T>(map: Map<string, CacheEntry<T>>, key: string): T | undefined {
   const hit = map.get(key);
@@ -75,6 +76,32 @@ export async function fetchSheetRows(config: SheetConfig): Promise<string[][]> {
   const rows = (res.data.values ?? []) as string[][];
   rowsCache.set(key, { value: rows, expiresAt: Date.now() + CACHE_TTL_MS });
   return rows;
+}
+
+/**
+ * Fetch row 1 (the header row) of a tracker tab.
+ *
+ * Only used by portals that derive their columns from the sheet instead of a
+ * hard-coded config. Headers change far less often than data, so this shares
+ * the 10-minute TTL used for tab titles.
+ */
+export async function fetchSheetHeader(config: SheetConfig): Promise<string[]> {
+  const key = `${config.spreadsheetId}:${config.gid}:header`;
+  const cached = getCached(headerCache, key);
+  if (cached) return cached;
+
+  const title = await resolveTabTitle(config.spreadsheetId, config.gid);
+  const sheets = getSheetsClient();
+
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: config.spreadsheetId,
+    range: `'${title.replace(/'/g, "''")}'!A1:Z1`,
+    valueRenderOption: "FORMATTED_VALUE",
+  });
+
+  const header = ((res.data.values?.[0] ?? []) as string[]).map((h) => h ?? "");
+  headerCache.set(key, { value: header, expiresAt: Date.now() + 10 * CACHE_TTL_MS });
+  return header;
 }
 
 /**

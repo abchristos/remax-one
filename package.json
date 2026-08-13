@@ -11,6 +11,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
+    "check:columns": "tsx scripts/check-columns.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {

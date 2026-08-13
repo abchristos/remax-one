@@ -12,6 +12,8 @@ import {
   Wrench,
   Banknote,
   RotateCw,
+  MessageSquare,
+  CreditCard,
   Menu,
   X,
   LogOut,
@@ -36,6 +38,8 @@ const NAV_ITEMS = [
   { href: "/maintenance", label: "My Maintenance", icon: Wrench },
   { href: "/deposits", label: "My Deposit Payouts", icon: Banknote },
   { href: "/renewals", label: "My Renewals", icon: RotateCw },
+  { href: "/queries", label: "My Queries", icon: MessageSquare },
+  { href: "/pops", label: "My POPs", icon: CreditCard },
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
