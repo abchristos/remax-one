@@ -7,9 +7,9 @@ import { useSearchParams } from "next/navigation";
 import { brand } from "@/config/brand";
 
 /**
- * Login page - the only public page. Sign-in is via Google with the company
- * domain enforced server-side; anything else lands back here with
- * ?error=AccessDenied.
+ * Login page - the only public page. Sign-in is via Google, with the allowed
+ * email domains enforced server-side; anything else lands back here with
+ * ?error=AccessDenied. Button wording lives in src/config/brand.ts.
  */
 
 function LoginCard() {
@@ -30,7 +30,7 @@ function LoginCard() {
           className="mt-6 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
         >
           {error === "AccessDenied"
-            ? "Please sign in with your company email address."
+            ? "That account is not on the approved list. Please sign in with the Google account your office registered for you."
             : "Sign-in failed. Please try again."}
         </div>
       )}
@@ -46,11 +46,11 @@ function LoginCard() {
           <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.4-5.1l-6.2-5.2C29.2 35.2 26.7 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z" />
           <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C40.9 35.6 44 30.3 44 24c0-1.3-.1-2.6-.4-3.9z" />
         </svg>
-        Sign in with company email
+        {brand.signInLabel}
       </button>
 
       <p className="mt-6 text-center text-xs text-gray-400">
-        Access is restricted to {brand.companyName} staff.
+        {brand.accessNote}
         <br />
         Problems signing in? Contact {brand.supportEmail}
       </p>

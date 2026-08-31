@@ -10,5 +10,8 @@ export const brand = {
   shortName: "One Rentals",
   tagline: "Rentals Agent Portal",
   logoSrc: "/logo.svg",
+  /** Wording on the sign-in button and the access note beneath it. */
+  signInLabel: "Sign in with Gmail account",
+  accessNote: "Access is restricted to approved agents.",
   supportEmail: "rentals@remax-one.co.za",
 } as const;

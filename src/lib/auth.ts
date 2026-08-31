@@ -26,6 +26,26 @@ const adminEmails = (process.env.ADMIN_EMAILS ?? "")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
 
+/**
+ * Consumer providers have no Google Workspace "hosted domain", so the `hd`
+ * sign-in hint below must not be sent for them - Google would filter every
+ * account out of the chooser and sign-in would appear broken.
+ */
+const CONSUMER_DOMAINS = new Set([
+  "gmail.com",
+  "googlemail.com",
+  "outlook.com",
+  "hotmail.com",
+  "yahoo.com",
+  "icloud.com",
+]);
+
+/** Only hint a hosted domain when there is exactly one and it is a real one. */
+const hostedDomainHint =
+  allowedDomains.length === 1 && !CONSUMER_DOMAINS.has(allowedDomains[0])
+    ? allowedDomains[0]
+    : undefined;
+
 function isCompanyEmail(email: string | null | undefined): boolean {
   if (!email) return false;
   const domain = email.split("@")[1]?.toLowerCase();
@@ -46,8 +66,9 @@ export const authOptions: NextAuthOptions = {
         params: {
           prompt: "select_account",
           // Hint Google to show only company accounts (still enforced
-          // server-side in the signIn callback below).
-          hd: allowedDomains[0],
+          // server-side in the signIn callback below). Omitted when agents
+          // sign in with Gmail or when several domains are allowed.
+          ...(hostedDomainHint ? { hd: hostedDomainHint } : {}),
         },
       },
     }),
