@@ -84,5 +84,34 @@ check("duplicate headers get unique keys, blanks dropped", keys, [
   "notes",
 ]);
 
+
+// ---------------------------------------------------------------------------
+// The REAL layouts, confirmed by the client on 2026-09-02. These are the ones
+// that matter: if a change makes the app pick a different column for one of
+// these sheets, agents stop seeing their own rows.
+// ---------------------------------------------------------------------------
+
+const REAL_QUERIES = ["Timestamp", "Agent", "Property", "Query", "Admin", "Status", "Feedback"];
+check("REAL queries sheet: agent is column B, matched by name", detectAgentColumn(REAL_QUERIES), {
+  index: 1,
+  mode: "name",
+});
+check(
+  "REAL queries sheet: Property is the card title",
+  deriveColumns(REAL_QUERIES, 1).find((c) => c.primary)?.label,
+  "Property"
+);
+
+const REAL_POPS = ["Timestamp", "Agent", "Property", "Admin", "Status", "Notes"];
+check("REAL POP sheet: agent is column B, matched by name", detectAgentColumn(REAL_POPS), {
+  index: 1,
+  mode: "name",
+});
+
+// Maintenance is one of the five hand-configured trackers, so its agent column
+// is not detected - but the client's headers confirm the built-in "B" is right.
+const REAL_MAINTENANCE = ["Timestamp", "Name of Agent", "Property", "Admin", "Status", "Notes"];
+check("REAL maintenance sheet: column B really is the agent", REAL_MAINTENANCE[1], "Name of Agent");
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
