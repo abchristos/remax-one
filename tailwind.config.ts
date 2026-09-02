@@ -16,6 +16,12 @@ const config: Config = {
           "secondary-dark": "var(--brand-secondary-dark)",
           surface: "var(--brand-surface)",
           ink: "var(--brand-ink)",
+          heading: "var(--brand-heading)",
+          sidebar: "var(--brand-sidebar)",
+          "sidebar-ink": "var(--brand-sidebar-ink)",
+          "sidebar-muted": "var(--brand-sidebar-muted)",
+          "sidebar-active": "var(--brand-sidebar-active)",
+          "sidebar-hover": "var(--brand-sidebar-hover)",
         },
       },
       fontFamily: {

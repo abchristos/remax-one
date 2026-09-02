@@ -4,16 +4,38 @@
 
 /* ============================================================================
    BRAND THEME - change these variables to re-skin the whole intranet.
-   Defaults follow RE/MAX brand identity (red / blue / white).
+
+   Every surface has its own "ink" (text) token, so a light surface and a
+   dark surface both stay readable - pick any colours you like, just keep
+   each surface/ink pair in contrast with each other.
    ========================================================================== */
 :root {
-  --brand-primary: #232323; /* RE/MAX red   - buttons, highlights   */
-  --brand-primary-dark: #c4c6c8; /* hover state                     */
-  --brand-secondary: #c4c6c8; /* RE/MAX blue  - sidebar, headings   */
-  --brand-secondary-dark: #f7f5ee;
-  --brand-surface: #f5f6f8; /* page background                     */
-  --brand-ink: #232323; /* main text colour                        */
-  --brand-font: "Gotham Bold", Gotham Book;
+  /* ACTIONS - buttons, links, icon tiles, focus rings */
+  --brand-primary: #232323;         /* charcoal                              */
+  --brand-primary-dark: #3d3d3d;    /* hover state - text stays white        */
+
+  /* DECORATIVE SURFACES - login backdrop gradient */
+  --brand-secondary: #c4c6c8;       /* silver                                */
+  --brand-secondary-dark: #f7f5ee;  /* cream                                 */
+
+  /* SIDEBAR - background follows --brand-secondary; text tokens are dark so
+     they read on silver. If you ever make the sidebar dark, flip these two
+     ink tokens to a light colour. */
+  --brand-sidebar: var(--brand-secondary);
+  --brand-sidebar-ink: #232323;             /* menu items, company name      */
+  --brand-sidebar-muted: #4a4d52;           /* tagline, inactive items       */
+  --brand-sidebar-active: rgba(0, 0, 0, 0.09);
+  --brand-sidebar-hover: rgba(0, 0, 0, 0.05);
+
+  /* TEXT */
+  --brand-heading: #232323;         /* page titles - always on white/surface */
+  --brand-ink: #232323;             /* body text                             */
+  --brand-surface: #f5f6f8;         /* page background                       */
+
+  /* Gotham is not a web font: it only shows if installed on the reader's
+     device, otherwise the fallbacks apply. To embed it properly, the font
+     files need to be added to /public and declared with @font-face. */
+  --brand-font: "Gotham", "Gotham Book", "Montserrat", "Segoe UI", Arial;
 }
 
 html,

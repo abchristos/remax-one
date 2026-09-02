@@ -51,7 +51,7 @@ function Card({ d }: { d: TrackerDiagnosis }) {
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-bold text-brand-secondary">{d.title}</h2>
+        <h2 className="text-lg font-bold text-brand-heading">{d.title}</h2>
         <span
           className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${verdict.tone}`}
         >
@@ -188,7 +188,7 @@ export default async function SheetCheckPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <h1 className="text-2xl font-bold text-brand-secondary">Sheet check</h1>
+      <h1 className="text-2xl font-bold text-brand-heading">Sheet check</h1>
       <p className="mt-1 text-sm text-gray-500">
         Why each tracker is or is not showing rows, checked against your own login. Admin only.
       </p>

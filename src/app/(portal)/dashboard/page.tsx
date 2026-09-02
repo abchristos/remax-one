@@ -12,7 +12,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <h1 className="text-2xl font-bold text-brand-secondary">Welcome, {firstName}</h1>
+      <h1 className="text-2xl font-bold text-brand-heading">Welcome, {firstName}</h1>
       <p className="mt-1 text-gray-500">
         Submit a new request below, or use the menu to track your existing requests.
       </p>

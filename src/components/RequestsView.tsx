@@ -55,13 +55,13 @@ export default function RequestsView({ category, title, description }: Props) {
     <div className="mx-auto max-w-6xl">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-brand-secondary">{title}</h1>
+          <h1 className="text-2xl font-bold text-brand-heading">{title}</h1>
           <p className="mt-1 text-sm text-gray-500">{description}</p>
         </div>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-brand-secondary hover:text-brand-secondary disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-brand-primary hover:text-brand-primary disabled:opacity-50"
         >
           <RotateCw size={15} className={loading ? "animate-spin" : ""} aria-hidden="true" />
           Refresh
@@ -80,7 +80,7 @@ export default function RequestsView({ category, title, description }: Props) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by property, status, admin..."
           aria-label={`Search ${title}`}
-          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm focus:border-brand-secondary focus:outline-none focus:ring-1 focus:ring-brand-secondary"
+          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
         />
       </div>
 

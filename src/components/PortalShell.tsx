@@ -62,8 +62,8 @@ function NavLinks({ isAdmin, onNavigate }: { isAdmin?: boolean; onNavigate?: () 
             aria-current={active ? "page" : undefined}
             className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
               active
-                ? "bg-white/15 text-white"
-                : "text-white/70 hover:bg-white/10 hover:text-white"
+                ? "bg-brand-sidebar-active text-brand-sidebar-ink"
+                : "text-brand-sidebar-muted hover:bg-brand-sidebar-hover hover:text-brand-sidebar-ink"
             }`}
           >
             <Icon size={18} aria-hidden="true" />
@@ -77,16 +77,16 @@ function NavLinks({ isAdmin, onNavigate }: { isAdmin?: boolean; onNavigate?: () 
 
 function SidebarContent({ isAdmin, onNavigate }: { isAdmin?: boolean; onNavigate?: () => void }) {
   return (
-    <div className="flex h-full flex-col bg-brand-secondary">
+    <div className="flex h-full flex-col bg-brand-sidebar">
       <div className="flex items-center gap-3 px-5 py-5">
         <Image src={brand.logoSrc} alt="" width={36} height={36} />
         <div>
-          <p className="text-sm font-bold leading-tight text-white">{brand.companyName}</p>
-          <p className="text-xs text-white/60">{brand.tagline}</p>
+          <p className="text-sm font-bold leading-tight text-brand-sidebar-ink">{brand.companyName}</p>
+          <p className="text-xs text-brand-sidebar-muted">{brand.tagline}</p>
         </div>
       </div>
       <NavLinks isAdmin={isAdmin} onNavigate={onNavigate} />
-      <div className="mt-auto p-4 text-center text-[11px] text-white/40">
+      <div className="mt-auto p-4 text-center text-[11px] text-brand-sidebar-muted">
         © {new Date().getFullYear()} {brand.companyName}
       </div>
     </div>
@@ -121,7 +121,7 @@ export default function PortalShell({
             <button
               onClick={() => setDrawerOpen(false)}
               aria-label="Close menu"
-              className="absolute right-3 top-4 z-10 rounded-md p-1 text-white/80 hover:text-white"
+              className="absolute right-3 top-4 z-10 rounded-md p-1 text-brand-sidebar-muted hover:text-brand-sidebar-ink"
             >
               <X size={22} />
             </button>
@@ -136,7 +136,7 @@ export default function PortalShell({
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
-            className="rounded-md p-1.5 text-brand-secondary hover:bg-gray-100 md:hidden"
+            className="rounded-md p-1.5 text-brand-ink hover:bg-gray-100 md:hidden"
           >
             <Menu size={22} />
           </button>
@@ -156,7 +156,7 @@ export default function PortalShell({
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-brand-secondary text-sm font-bold text-white">
+              <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-brand-primary text-sm font-bold text-white">
                 {user.name.charAt(0).toUpperCase()}
               </div>
             )}

@@ -20,7 +20,7 @@ function LoginCard() {
     <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
       <div className="flex flex-col items-center gap-3">
         <Image src={brand.logoSrc} alt={brand.companyName} width={72} height={72} priority />
-        <h1 className="text-xl font-bold text-brand-secondary">{brand.companyName}</h1>
+        <h1 className="text-xl font-bold text-brand-heading">{brand.companyName}</h1>
         <p className="text-sm text-gray-500">{brand.tagline}</p>
       </div>
 
