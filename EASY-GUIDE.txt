@@ -430,13 +430,28 @@ Everything about the look lives in just three places:
      Open  src\app\globals.css  in Notepad. Right at the top is a
      clearly-marked section like:
 
-       --brand-primary: #dc1c2e;     (the red - buttons)
-       --brand-secondary: #003da5;   (the blue - menu & headings)
+       --brand-primary: #232323;     (buttons and highlights)
+       --brand-secondary: #c4c6c8;   (the menu background)
+       --brand-heading: #232323;     (page titles)
+       --brand-sidebar-ink: #232323; (the writing ON the menu)
 
      Those #-codes are colour codes. Swap in your own brand codes
      (your marketing team or a site like htmlcolorcodes.com can
      give you the code for any colour). Change the code, save, and
      the ENTIRE site repaints itself.
+
+     THE ONE RULE: every background has a matching "ink" (writing)
+     colour, and the two must be far apart - dark writing on a
+     light background or light writing on a dark one. If you make
+     the menu (--brand-secondary) dark, change --brand-sidebar-ink
+     and --brand-sidebar-muted to something light, or the menu
+     words disappear. Page titles (--brand-heading) always sit on
+     white, so keep that one dark.
+
+     A NOTE ON FONTS: a font only shows if it lives on the reader's
+     phone or computer. Gotham does not, so the site falls back to
+     the next font in the list. Embedding Gotham properly needs
+     the licensed font files - ask before buying them.
 
   3. THE NAMES
      Open  src\config\brand.ts  and change the company name,
