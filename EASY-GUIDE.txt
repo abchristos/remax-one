@@ -518,31 +518,37 @@ humans - and humans are inconsistent. The sheet might say
 account says "Johnathan Smith".
 
 If an agent logs in and sees an empty list even though they have
-rows in the sheet, this mismatch is almost always why. The fix:
-add their alternative spellings ("aliases") to the app's filing
-cabinet. In PowerShell, in the project folder, type:
+rows in the sheet, this mismatch is almost always why. The empty
+page even tells them which name it looked for.
 
-    npx prisma studio
+The fix is the AGENTS page, which admins see in the left menu:
+find the agent (they appear automatically after their first
+sign-in), type the spelling the sheets use - "Refilwe", "J. Smith",
+whatever it is - and click Add. Their rows appear on their next
+refresh. Add as many spellings as the admins have used.
 
-A friendly page opens in your browser showing the database like a
-spreadsheet. Open "AgentProfile", find the agent (they appear here
-automatically after their first login), then add rows in
-"AgentAlias" with the exact spellings used in the sheets. Done -
-their rows appear on their next refresh.
+THE ONE THING ALIASES CANNOT FIX: two agents both written as just
+"Sarah" in a sheet. No spelling can tell those rows apart, and an
+alias of "Sarah" would show each of them the other's rows. Ask
+agents to type their FULL name on the forms.
 
 MAKING SOMEONE A MANAGER (ADMIN)
 
-In that same Prisma Studio page, changing a person's "role" from
-AGENT to ADMIN makes them see EVERYONE's rows in every list -
-useful for the rentals manager and admin staff.
+Put their sign-in address in the ADMIN_EMAILS line of the .env file
+(several addresses separated by commas). Admins see EVERYONE's rows
+in every list and get the Agents and Sheet check pages - right for
+the rentals manager and admin staff. They must sign out and back in
+for it to take effect.
 
 REMOVING SOMEONE'S ACCESS
 
 Two layers of protection:
   - When IT switches off their company Google account, they can't
     log in anymore - automatically.
-  - You can also flip their "active" switch to false in Prisma
-    Studio to block them instantly, even if their email still works.
+  - You can also block someone instantly, even if their email still
+    works: in PowerShell, in the project folder, type
+    npx prisma studio , open "AgentProfile", find them and flip
+    their "active" switch to false.
 
 
 =====================================================================

@@ -15,6 +15,7 @@ import {
   MessageSquare,
   CreditCard,
   Stethoscope,
+  Users,
   Menu,
   X,
   LogOut,
@@ -45,7 +46,10 @@ const NAV_ITEMS = [
 ];
 
 /** Shown only to admins. */
-const ADMIN_NAV_ITEMS = [{ href: "/sheet-check", label: "Sheet check", icon: Stethoscope }];
+const ADMIN_NAV_ITEMS = [
+  { href: "/agents", label: "Agents", icon: Users },
+  { href: "/sheet-check", label: "Sheet check", icon: Stethoscope },
+];
 
 function NavLinks({ isAdmin, onNavigate }: { isAdmin?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
