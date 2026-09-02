@@ -122,9 +122,18 @@ export default function RequestsView({ category, title, description }: Props) {
             <p className="font-medium text-gray-600">
               {query ? "No results match your search." : `No ${title.toLowerCase()} found.`}
             </p>
-            {!query && (
+            {!query && data.sheetRows === 0 && (
               <p className="text-sm text-gray-400">
-                New submissions appear here shortly after the form is processed.
+                There is nothing in this tracker yet. New submissions appear here shortly
+                after the form is processed.
+              </p>
+            )}
+            {!query && data.sheetRows > 0 && (
+              <p className="max-w-md text-sm text-gray-400">
+                This tracker has {data.sheetRows} row{data.sheetRows === 1 ? "" : "s"} in it,
+                but none are recorded against you. If some of them should be yours, your name
+                is probably spelled differently in the sheet than on your Google account — ask
+                the administrator to check.
               </p>
             )}
           </div>

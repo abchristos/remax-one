@@ -26,7 +26,11 @@ export interface RequestListResponse {
   title: string;
   columns: RequestColumn[];
   rows: RequestRecord[];
+  /** Rows belonging to this user. */
   total: number;
+  /** Rows in the tracker altogether, before filtering. Lets an empty page say
+   *  whether the sheet is empty or simply has nothing recorded against you. */
+  sheetRows: number;
   fetchedAt: string;
   /** Set when rows were withheld for a reason the agent should see. */
   notice?: string;
@@ -164,6 +168,7 @@ export async function getRequestsForUser(
       ...base,
       rows: [],
       total: 0,
+      sheetRows: rawRows.filter((r) => r.some((c) => c && c.trim())).length,
       notice:
         "We could not work out which column of this sheet holds the agent's name, " +
         "so nothing is shown. Please let the administrator know.",
@@ -182,10 +187,12 @@ export async function getRequestsForUser(
   const agentIdx = layout.agentIndex;
   const dateField = layout.columns.find((c) => c.kind === "date");
 
+  let sheetRows = 0;
   const rows: RequestRecord[] = [];
   rawRows.forEach((raw, i) => {
     // Skip fully blank rows.
     if (!raw.some((cell) => cell && cell.trim())) return;
+    sheetRows++;
     if (agentIdx !== null && !matcher(raw[agentIdx])) return;
 
     const values: Record<string, string> = {};
@@ -207,5 +214,5 @@ export async function getRequestsForUser(
     });
   }
 
-  return { ...base, rows, total: rows.length };
+  return { ...base, rows, total: rows.length, sheetRows };
 }
