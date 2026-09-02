@@ -129,12 +129,25 @@ export default function RequestsView({ category, title, description }: Props) {
               </p>
             )}
             {!query && data.sheetRows > 0 && (
-              <p className="max-w-md text-sm text-gray-400">
-                This tracker has {data.sheetRows} row{data.sheetRows === 1 ? "" : "s"} in it,
-                but none are recorded against you. If some of them should be yours, your name
-                is probably spelled differently in the sheet than on your Google account — ask
-                the administrator to check.
-              </p>
+              <div className="max-w-md text-sm text-gray-400">
+                <p>
+                  This tracker has {data.sheetRows} row{data.sheetRows === 1 ? "" : "s"} in
+                  it, but none are recorded against you.
+                </p>
+                <p className="mt-2">
+                  We looked for rows where the agent is written as{" "}
+                  {data.lookedFor.map((n, i) => (
+                    <span key={n}>
+                      {i > 0 && " or "}
+                      <span className="rounded bg-gray-100 px-1.5 py-0.5 font-medium text-gray-600">
+                        {n}
+                      </span>
+                    </span>
+                  ))}
+                  . If the sheet calls you something shorter or different, ask the
+                  administrator to add that spelling for you.
+                </p>
+              </div>
             )}
           </div>
         )}

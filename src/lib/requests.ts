@@ -34,6 +34,12 @@ export interface RequestListResponse {
   fetchedAt: string;
   /** Set when rows were withheld for a reason the agent should see. */
   notice?: string;
+  /**
+   * The names (or email) this user's rows were searched for. It is their own
+   * identity, so it is safe to show them - and it is the first thing to check
+   * when a page is unexpectedly empty.
+   */
+  lookedFor: string[];
 }
 
 export interface PortalUser {
@@ -70,11 +76,6 @@ export async function agentNameCandidates(user: PortalUser): Promise<string[]> {
   }
 
   return Array.from(new Set(candidates.filter(Boolean)));
-}
-
-/** Build the name-based row matcher for a user from their profile + aliases. */
-async function matcherForUser(user: PortalUser): Promise<AgentMatcher> {
-  return buildAgentMatcher(await agentNameCandidates(user));
 }
 
 /**
@@ -169,6 +170,7 @@ export async function getRequestsForUser(
       rows: [],
       total: 0,
       sheetRows: rawRows.filter((r) => r.some((c) => c && c.trim())).length,
+      lookedFor: [],
       notice:
         "We could not work out which column of this sheet holds the agent's name, " +
         "so nothing is shown. Please let the administrator know.",
@@ -176,12 +178,16 @@ export async function getRequestsForUser(
   }
 
   let matcher: AgentMatcher;
+  let lookedFor: string[];
   if (isAdmin) {
     matcher = matchAll;
+    lookedFor = ["(admin - every row)"];
   } else if (layout.agentMode === "email") {
     matcher = buildEmailMatcher(user.email);
+    lookedFor = [user.email];
   } else {
-    matcher = await matcherForUser(user);
+    lookedFor = await agentNameCandidates(user);
+    matcher = buildAgentMatcher(lookedFor);
   }
 
   const agentIdx = layout.agentIndex;
@@ -214,5 +220,5 @@ export async function getRequestsForUser(
     });
   }
 
-  return { ...base, rows, total: rows.length, sheetRows };
+  return { ...base, rows, total: rows.length, sheetRows, lookedFor };
 }
